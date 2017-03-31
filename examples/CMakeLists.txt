@@ -12,5 +12,5 @@ if( VIAME_INSTALL_EXAMPLES )
   add_subdirectory( scoring_and_roc_generation )
   add_subdirectory( using_detectors_in_cxx_code )
   add_subdirectory( visualizing_detections_in_gui )
-
+  add_subdirectory( benthos_detect )
 endif()

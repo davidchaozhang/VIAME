@@ -1,0 +1,43 @@
+# ================================================================
+process input
+  :: frame_list_input
+# Input file containing new-line separated paths to sequential image
+# files.
+  :image_list_file /home/david/zdata/projects/VIAME/examples/BenthosDetect/input_image_list.txt
+  :frame_time .9
+
+# Algorithm to use for 'image_reader'.
+# Must be one of the following options:
+# 	- ocv
+# 	- vxl
+  :image_reader:type ocv
+
+# ================================================================
+# Python process to accept an image.
+process process
+  :: ProcessImage_sri
+
+# ================================================================
+process disp
+  :: image_viewer
+:annotate_image         true
+:pause_time             2.0
+:footer                 Feature Tracks
+:header                 header-header
+
+
+# ================================================================
+# global pipeline config
+#
+config _pipeline:_edge
+       :capacity 10
+
+# ================================================================
+# connections
+connect from input.image
+        to   process.image
+
+connect from process.out_image
+        to disp.image
+
+# -- end of file --

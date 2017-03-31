@@ -24,3 +24,7 @@ endif()
 if( VIAME_ENABLE_UW_PREDICTOR )
   add_subdirectory( uw_predictor )
 endif()
+
+if( VIAME_ENABLE_BENTHOS_DETECT )
+  add_subdirectory( benthos_detect )
+endif()

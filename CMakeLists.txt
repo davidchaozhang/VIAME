@@ -54,6 +54,7 @@ option( VIAME_ENABLE_SCALLOP_TK     "Enable ScallopTK plugin"       OFF )
 option( VIAME_ENABLE_UW_PREDICTOR   "Enable UW predictor plugin"    OFF )
 option( VIAME_ENABLE_YOLO           "Enable YOLO (darknet) plugin"  OFF )
 option( VIAME_ENABLE_BURNOUT        "Enable Burn-Out plugin"        OFF )
+option( VIAME_ENABLE_BENTHOS_DETECT "Enable Benthos-detect plugin"  OFF )
 
 ###
 # Add external package build instructions
@@ -84,6 +85,10 @@ endif()
 
 if( VIAME_ENABLE_VIVIA )
   set( VIAME_ENABLE_BURNOUT ON CACHE BOOL "Burn-Out required for other projects" FORCE )
+endif()
+
+if( VIAME_ENABLE_BENTHOS_DETECT )
+  set( VIAME_ENABLE_OPENCV ON CACHE BOOL "Benthos-detect required for other projects" FORCE )
 endif()
 
 if( VIAME_ENABLE_MATLAB )
