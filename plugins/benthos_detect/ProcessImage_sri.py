@@ -71,9 +71,9 @@ class Inference:
                      1, #lev_iterations
                      True) #flow_quantize
         #double opflow_thr, int min_blob_size, int max_blob_size)
-        self.fs.params(opflow_thr, 0, int(self.width*self.height/4)) 
+        self.fs.params(opflow_thr, 0, int(self.width*self.height/4))
 
-         self.ColorTbl = (
+        self.ColorTbl = (
             (  0,  0,  0),# 0: black
             (  0,  0,128),# 1: maroon
             (  0,255,  0),# 2: green
@@ -82,14 +82,14 @@ class Inference:
             (128,  0,128),# 5: purple
             (128,128,  0),# 6: teal
             (192,192,192),# 7: silver
-            (128,128,128),# 8: gray    
-            (  0,  0,255),# 9: red    
-            (  0,255,191),# 10: lime    
+            (128,128,128),# 8: gray
+            (  0,  0,255),# 9: red
+            (  0,255,191),# 10: lime
             (  0,255,255),# 11: yellow
             (255,  0,  0),# 12: blue
             (255,  0,255),# 13: fuchsia
             (255,255,  0),# 14: aqua
-            (255,255,255) # 15: white 
+            (255,255,255) # 15: white
             )
         print "Inference init done"
 
@@ -115,7 +115,7 @@ class Inference:
             # put two lists together
             rois = selRois + posRois
         else:
-            rois = selRois 
+            rois = selRois
 
         # clean up list
         rois = removeDuplicates(rois,0.95)
@@ -139,11 +139,11 @@ class Inference:
         imgPyr = cv2.pyrDown(img)
 
         # selective search
-        regions = selective_search(imgPyr,color_spaces = ['rgb'], 
+        regions = selective_search(imgPyr,color_spaces = ['rgb'],
                                    ks = [self.ks],
-                                   feature_masks=[features.SimilarityMask(size=True, 
-                                                                          color=True, 
-                                                                          texture=True, 
+                                   feature_masks=[features.SimilarityMask(size=True,
+                                                                          color=True,
+                                                                          texture=True,
                                                                           fill=True)])
         selRois = [(x1,y1,x2-x1,y2-y1) for v,(y1,x1,y2,x2) in regions]
         selRois = [(2*x,2*y,2*w,2*h) for (x,y,w,h) in selRois]
@@ -151,7 +151,7 @@ class Inference:
 
     def flowSegment(self,img,fnum,debugShow=False):
         """return (negRois:x,y,w,h,posRois:x,y,w,h) """
-        return self.fs.run(img,fnum,debugShow) 
+        return self.fs.run(img,fnum,debugShow)
 
     def paint(self,img,rois,scores):
         if(self.mode == 'sel' or self.mode == 'flow'):
@@ -168,7 +168,7 @@ class Inference:
     def type_paint(self,img,rois,scores):
         """ paint boxed using different color for each type"""
         scored_boxes = []
-        lens = len(rois)  
+        lens = len(rois)
         for i in range(lens):
             (x,y,w,h) =  rois[i]
             maxIdx = numpy.unravel_index(scores[i].argmax(),scores[i].shape)
@@ -185,7 +185,7 @@ class Inference:
 
     def nms_paint(self,img,rois,scores):
         scored_boxes = []
-        lens = len(rois)  
+        lens = len(rois)
         for i in range(lens):
             (x,y,w,h) =  rois[i]
             pos_score = scores[i][1]
@@ -193,11 +193,11 @@ class Inference:
                 scored_box = [x, y, x+w-1, y+h-1, pos_score]
                 scored_boxes.append(scored_box)
             cv2.rectangle(img,(x,y),(x+w-1,y+h-1),(0,128,0),1)
-    
+
         nms_boxes = self.nms(np.array(scored_boxes), 0.1)
         #print nms_boxes
-    
-        lens = len(nms_boxes) 
+
+        lens = len(nms_boxes)
         for i in range(lens):
             score = nms_boxes[i][4]
             x0 = int(nms_boxes[i][0])
@@ -278,7 +278,7 @@ class Inference:
         return img
 
     def nmsEx3(self,rois,scores,overlap):
-        """ run nms on whole list 
+        """ run nms on whole list
         rois:[(x,y,w,h),...]
         scores:[(...),...]  each roi has score for each type
         return: [(x,y,w,h,type,score),...]
@@ -332,19 +332,19 @@ class Inference:
         boxes: [(x,y,x1,y1,...,score),...]
         return:[(x,y,x1,y1,...,score),...]
         """
-        if boxes.size==0: 
+        if boxes.size==0:
             return []
-    
+
         x1 = boxes[:,0]
         y1 = boxes[:,1]
         x2 = boxes[:,2]
         y2 = boxes[:,3]
         s = boxes[:,-1]
-    
+
         area = (x2-x1+1) * (y2-y1+1)
 
         I = np.argsort(s)
- 
+
         pick = np.zeros(s.size, dtype=np.int)
         counter = 0
 
@@ -353,19 +353,19 @@ class Inference:
             i = I[-1]
             pick[counter] = i
             counter += 1
-            
+
             xx1 = np.maximum(x1[i], x1[I[:-1]])
             yy1 = np.maximum(y1[i], y1[I[:-1]])
             xx2 = np.minimum(x2[i], x2[I[:-1]])
             yy2 = np.minimum(y2[i], y2[I[:-1]])
-            
+
             w = np.maximum(0.0, xx2 - xx1 + 1)
             h = np.maximum(0.0, yy2 - yy1 + 1)
-            
+
             o = w*h / area[I[:-1]]
-            
+
             I = np.delete(I, np.concatenate([[last], np.nonzero(o > overlap)[0]]))
-        
+
         pick = pick[:counter]
         top = boxes[pick,:]
         return top
@@ -386,7 +386,7 @@ def fishdetect(cvimg):
     inferencing = Inference(model_def,pretrained_model,mean_file,width,height,gpu, mode,ks,opflow_thr,flowEnable)
 
     cv2.namedWindow("Source",cv2.cv.CV_WINDOW_AUTOSIZE);
- 
+
     # read image
     (selRois,scores) = inferencing.execute(cvimg,f)
 
@@ -446,7 +446,7 @@ class ProcessImage_sri(KwiverProcess):
         pil_image = in_img.get_pil_image()
         print 'image size', pil_image.size
     # convert image to cv::Mat
-        cvimg = numpy.array(pil_image) 
+        cvimg = numpy.array(pil_image)
         cvimg = cvimg[:,:,:].copy()
         cvimg = fishdetect(cvimg)
     # convert cvimg back to pil_image
@@ -464,7 +464,7 @@ class ProcessImage_sri(KwiverProcess):
         del draw
         """
         # get new image handle
-        new_image = Image.from_pil( pil_image )  
+        new_image = Image.from_pil( pil_image )
         new_ic = ImageContainer( new_image )
 
         # push object to output port
