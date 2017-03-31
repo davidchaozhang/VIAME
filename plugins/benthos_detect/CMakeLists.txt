@@ -1,8 +1,11 @@
-#
-# KWIVER processes
-#
+###
+# VIAME Benthos Detect Process
+##
 
-set(kwiver_python_subdir "python${PYTHON_VERSION}${PYTHON_ABIFLAGS}")
+find_package( PythonInterp REQUIRED )
+find_package( PythonLibs REQUIRED )
+
+set(kwiver_python_subdir "python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
 set(kwiver_python_output_path "${VIAME_BUILD_PREFIX}/lib/${kwiver_python_subdir}")
 
 kwiver_create_python_plugin_init(kwiver)
