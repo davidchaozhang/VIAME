@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "hello_world_detector.h"
+#include "hello_world_filter.h"
 
 #include <cmath>
 #include <iostream>
@@ -39,7 +39,7 @@ namespace viame {
 /**
  * @brief Storage class for private member variables
  */
-class hello_world_detector::priv
+class hello_world_filter::priv
 {
 public:
 
@@ -47,24 +47,24 @@ public:
   ~priv() {}
 
   std::string m_text;
-}; // end class hello_world_detector::priv
+}; // end class hello_world_filter::priv
 
 // =================================================================================================
 
-hello_world_detector::
-hello_world_detector()
+hello_world_filter::
+hello_world_filter()
   : d( new priv )
 {}
 
 
-hello_world_detector::
-  ~hello_world_detector()
+hello_world_filter::
+  ~hello_world_filter()
 {}
 
 
 // -------------------------------------------------------------------------------------------------
 kwiver::vital::config_block_sptr
-hello_world_detector::
+hello_world_filter::
 get_configuration() const
 {
   // Get base config from base class
@@ -78,7 +78,7 @@ get_configuration() const
 
 // -------------------------------------------------------------------------------------------------
 void
-hello_world_detector::
+hello_world_filter::
 set_configuration( kwiver::vital::config_block_sptr config )
 {
   d->m_text = config->get_value< std::string >( "text" );
@@ -87,7 +87,7 @@ set_configuration( kwiver::vital::config_block_sptr config )
 
 // -------------------------------------------------------------------------------------------------
 bool
-hello_world_detector::
+hello_world_filter::
 check_configuration( kwiver::vital::config_block_sptr config ) const
 {
   if( d->m_text.empty() )
@@ -100,15 +100,15 @@ check_configuration( kwiver::vital::config_block_sptr config ) const
 
 
 // -------------------------------------------------------------------------------------------------
-kwiver::vital::detected_object_set_sptr
-hello_world_detector::
-detect( kwiver::vital::image_container_sptr image_data ) const
+kwiver::vital::image_container_sptr
+hello_world_filter::
+filter( kwiver::vital::image_container_sptr image_data )
 {
-  auto detected_set = std::make_shared< kwiver::vital::detected_object_set >();
+  kwiver::vital::image_container_sptr image_output;
 
   std::cout << "Text: " << d->m_text << std::endl;
 
-  return detected_set;
+  return image_output;
 }
 
 
