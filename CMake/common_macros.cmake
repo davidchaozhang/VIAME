@@ -56,5 +56,3 @@ endfunction()
 function( RemoveDir _inDir )
   file( REMOVE_RECURSE ${_inDir} )
 endfunction()
-
-

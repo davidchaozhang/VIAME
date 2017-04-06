@@ -1,18 +1,11 @@
 ###
-# VIAME Benthos Detect Process
+# VIAME Benthos Detect Processes
 ##
 
-find_package( PythonInterp REQUIRED )
-find_package( PythonLibs REQUIRED )
+sprokit_add_python_module(${CMAKE_CURRENT_SOURCE_DIR}/__init__.py
+  viame/processes/benthos_detect
+  __init__)
 
-set(kwiver_python_subdir "python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
-set(kwiver_python_output_path "${VIAME_BUILD_PREFIX}/lib/${kwiver_python_subdir}")
-
-kwiver_create_python_plugin_init(kwiver)
-kwiver_create_python_plugin_init(kwiver/processes)
-
-# add python processes here
-
-kwiver_add_python_module(${CMAKE_CURRENT_SOURCE_DIR}/ProcessImage_sri.py
-  kwiver/processes
+sprokit_add_python_module(${CMAKE_CURRENT_SOURCE_DIR}/ProcessImage_sri.py
+  viame/processes/benthos_detect
   ProcessImage_sri)

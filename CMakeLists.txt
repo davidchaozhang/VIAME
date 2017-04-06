@@ -132,6 +132,13 @@ if( VIAME_ENABLE_PYTHON )
     message( FATAL_ERROR "pyconfig.h does not exist in your PYTHON_INCLUDE_DIR \
       make sure the variable is set correctly and you have python-dev installed." )
   endif()
+
+  # Setup python directories for plugin processes in same style as KWIVER
+  set( kwiver_python_subdir "python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}" )
+  set( kwiver_python_output_path "${VIAME_BUILD_PREFIX}/lib/${kwiver_python_subdir}" )
+
+  kwiver_create_python_plugin_init( viame )
+  kwiver_create_python_plugin_init( viame/processes )
 endif()
 
 # VXL enabled triggers yasm to be built, requiring at least some python
